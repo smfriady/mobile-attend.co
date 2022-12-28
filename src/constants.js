@@ -1,0 +1,1 @@
+export const URI_APOLLO = "http://localhost:4000/"
