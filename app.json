@@ -1,6 +1,9 @@
 {
   "expo": {
     "name": "mobile-attend.co",
+    "plugins": [
+      "expo-image-picker"
+    ],
     "slug": "mobile-attend.co",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -14,9 +17,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
