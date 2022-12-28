@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator();
 export default function MainNavigation() {
   return (
     <Stack.Navigator
-      initialRouteName="TabNavigation"
+      initialRouteName="LoginPage"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="LoginPage" component={LoginPage} />

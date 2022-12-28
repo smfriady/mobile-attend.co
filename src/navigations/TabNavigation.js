@@ -6,6 +6,7 @@ import MyHeader from "../components/MyHeader";
 import { Text } from "react-native";
 import { Octicons } from "@expo/vector-icons";
 
+
 const Tab = createBottomTabNavigator();
 
 const header = ({ route, options }) => {
@@ -28,7 +29,9 @@ const header = ({ route, options }) => {
   return <MyHeader title={title} />;
 };
 
-export default function TabNavigation() {
+export default function TabNavigation({ navigation }) {
+  
+
   return (
     <Tab.Navigator
       initialRouteName="HomePage"
@@ -59,7 +62,15 @@ export default function TabNavigation() {
       />
       <Tab.Screen
         name="ProfilePage"
-        component={() => <Text>Profile</Text>}
+        component={() => (
+          <Text
+            onPress={() => {
+              navigation.navigate("LoginPage");
+            }}
+          >
+            Logout
+          </Text>
+        )}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Octicons name="person" size={size} color={color} />
