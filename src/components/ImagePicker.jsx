@@ -4,9 +4,11 @@ import * as ImagePicker from "expo-image-picker";
 
 export default function ImagePickerExample() {
   const [image, setImage] = useState(null);
+  const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
+    await requestPermission();
+
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -14,16 +16,14 @@ export default function ImagePickerExample() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
   };
 
   const submit = () => {
-    console.log("berhasil submit")
-  }
+    console.log("berhasil submit");
+  };
 
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
@@ -33,7 +33,7 @@ export default function ImagePickerExample() {
           marginVertical: 30,
           backgroundColor: "#3E5BA6",
           borderRadius: 20,
-          width:"80%"
+          width: "80%",
         }}
       >
         <Button title="Upload Selfie" onPress={pickImage} color="#F6F8FF" />

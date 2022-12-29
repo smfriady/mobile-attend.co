@@ -2,7 +2,21 @@
   "expo": {
     "name": "mobile-attend.co",
     "plugins": [
-      "expo-image-picker"
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Attend.co to access your photos."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "ACCESS_COARSE_LOCATION": "Allows Attend.co to access approximate location.",
+          "ACCESS_FINE_LOCATION": "Allows Attend.co to access precise location.",
+          "FOREGROUND_SERVICE": "Allows Attend.co to use foreground service.",
+          "ACCESS_BACKGROUND_LOCATION": "Allows Attend.co to access location in the background."
+        }
+      ]
     ],
     "slug": "mobile-attend.co",
     "version": "1.0.0",
@@ -19,7 +33,10 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": ["location", "geofencing", "fetch"]
+      }
     },
     "android": {
       "adaptiveIcon": {
