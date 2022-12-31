@@ -9,6 +9,12 @@
         }
       ],
       [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "com.apple.developer.icloud-container-environment"
+        }
+      ],
+      [
         "expo-location",
         {
           "ACCESS_COARSE_LOCATION": "Allows Attend.co to access approximate location.",

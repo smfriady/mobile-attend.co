@@ -77,6 +77,9 @@ export default function HomePage({ navigation }) {
   const goToFormAttend = () => {
     navigation.navigate("AttendForm");
   };
+  const goToFormPermit = () => {
+    navigation.navigate("PermitForm");
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F8FF" }}>
@@ -225,6 +228,7 @@ export default function HomePage({ navigation }) {
               paddingHorizontal: 20,
               borderRadius: 20,
             }}
+            onPress={goToFormPermit}
           >
             <FontAwesome5 name="calendar-times" size={24} color="#F7F8FF" />
             <Text style={{ marginLeft: 10, color: "#F7F8FF" }}>
