@@ -121,7 +121,7 @@ const DocumentPickerExample = () => {
         </Portal>
         {/* end modal permit type */}
       </View>
-      <View style={{ margin: 32 }}>
+      <View style={{ marginVertical: 32, marginHorizontal: 48 }}>
         <Text style={{ fontSize: 20 }}>Description</Text>
         <View
           style={{

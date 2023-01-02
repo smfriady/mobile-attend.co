@@ -13,65 +13,16 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Table, Row } from "react-native-table-component";
 
 export default function HomePage({ navigation }) {
-  const tableHead = [
-    "No",
-    "Date",
-    "Nik",
-    "Type",
-    "Description",
-    "Shift",
-    "Time in",
-    "Time out",
-  ];
+  const tableHead = ["No", "Date", "Type"];
 
-  const widthArr = [100, 100, 100, 150, 150, 100, 100, 100];
+  const widthArr = [100, 100, 164];
 
   const tableData = [
-    [
-      "Monday, 01-20-2020",
-      "EM-120988",
-      "Attended",
-      "-",
-      "AK-401 \n(00:00 - 08:00)",
-      "00:15",
-      "08:15",
-    ],
-    [
-      "Monday, 01-20-2020",
-      "EM-120988",
-      "Sick",
-      "Cold and flue",
-      "AK-401 \n(00:00 - 08:00)",
-      "-",
-      "-",
-    ],
-    [
-      "Monday, 01-20-2020",
-      "EM-120988",
-      "Paid Leave",
-      "Marry",
-      "AK-401 \n(00:00 - 08:00)",
-      "-",
-      "-",
-    ],
-    [
-      "Monday, 01-20-2020",
-      "EM-120988",
-      "Permit",
-      "Accident",
-      "AK-401 \n(00:00 - 08:00)",
-      "-",
-      "-",
-    ],
-    [
-      "Monday, 01-20-2020",
-      "EM-120988",
-      "Attended",
-      "-",
-      "AK-401 \n(00:00 - 08:00)",
-      "00:15",
-      "08:15",
-    ],
+    ["Monday, 01-20-2020", "Attended"],
+    ["Monday, 01-20-2020", "Sick"],
+    ["Monday, 01-20-2020", "Paid Leave"],
+    ["Monday, 01-20-2020", "Accident"],
+    ["Monday, 01-20-2020", "Attended"],
   ];
 
   const goToFormAttend = () => {
@@ -247,7 +198,7 @@ export default function HomePage({ navigation }) {
               marginBottom: 10,
             }}
           >
-            History List
+            History
           </Text>
           <ScrollView horizontal={true}>
             <View>

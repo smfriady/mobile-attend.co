@@ -1,11 +1,11 @@
 import React from "react";
-import HomePage from "../pages/HomePage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getHeaderTitle } from "@react-navigation/elements";
 import MyHeader from "../components/MyHeader";
 import { Text } from "react-native";
 import { Octicons } from "@expo/vector-icons";
-
+import HomePage from "../pages/HomePage";
+import HistoryPage from "../pages/HistoryPage";
 
 const Tab = createBottomTabNavigator();
 
@@ -30,8 +30,6 @@ const header = ({ route, options }) => {
 };
 
 export default function TabNavigation({ navigation }) {
-  
-
   return (
     <Tab.Navigator
       initialRouteName="HomePage"
@@ -42,7 +40,7 @@ export default function TabNavigation({ navigation }) {
       }}
     >
       <Tab.Screen
-        name="HomePage"
+        name="Home"
         component={HomePage}
         options={{
           headerShown: false,
@@ -52,9 +50,10 @@ export default function TabNavigation({ navigation }) {
         }}
       />
       <Tab.Screen
-        name="HistoryPage"
-        component={() => <Text>History</Text>}
+        name="History"
+        component={HistoryPage}
         options={{
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Octicons name="history" size={size} color={color} />
           ),
