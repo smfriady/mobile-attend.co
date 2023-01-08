@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function MyHeader({ title, style }) {
   const navigate = useNavigation();
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: "#F7F8FF"}}>
       <View
         style={{
           paddingHorizontal: 40,

@@ -6,12 +6,11 @@ import MapView, { Marker } from "react-native-maps";
 
 export default function Map() {
   const [location, setLocation] = useState(null);
+  const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
   const [errorMsg, setErrorMsg] = useState(null);
 
   const { width, height } = Dimensions.get("window");
 
-  const SCREEN_HEIGHT = height;
-  const SCREEN_WIDTH = width;
   const ASPECT_RATIO = width / height;
   const LATITUDE_DELTA = 0.0922;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
@@ -24,6 +23,7 @@ export default function Map() {
       console.log(error);
       return;
     }
+    
     if (data) {
       const { locations } = data;
       // do something with the locations captured in the background
@@ -63,7 +63,16 @@ export default function Map() {
     getPosition();
   }, []);
 
-//   console.log(location);
+  useEffect(() => {
+    if (location) {
+      setPosition({
+        latitude: location[0]?.coords.latitude,
+        longitude: location[0]?.coords.longitude,
+      });
+    }
+  }, [location]);
+
+  //   console.log(location);
   let text = "Waiting..";
 
   if (errorMsg) {
@@ -81,25 +90,46 @@ export default function Map() {
     );
   }
 
-  return (
-    <View>
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: -6.151561,
-          longitude: 106.567459,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }}
-      >
-        <Marker coordinate={{ latitude: -6.151561, longitude: 106.567459 }}>
-          <View style={styles.radius}>
-            <View style={styles.marker} />
-          </View>
-        </Marker>
-      </MapView>
-    </View>
-  );
+  // [
+  //   {
+  //     coords: {
+  //       accuracy: 5,
+  //       altitude: 0,
+  //       altitudeAccuracy: -1,
+  //       heading: -1,
+  //       latitude: -6.151561,
+  //       longitude: 106.567459,
+  //       speed: -1,
+  //     },
+  //     timestamp: 1673053633013.4702,
+  //   }
+  // ];
+
+  if (position.latitude && position.longitude)
+    return (
+      <View>
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: position.latitude,
+            longitude: position.longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }}
+        >
+          <Marker
+            coordinate={{
+              latitude: position.latitude,
+              longitude: position.longitude,
+            }}
+          >
+            <View style={styles.radius}>
+              <View style={styles.marker} />
+            </View>
+          </Marker>
+        </MapView>
+      </View>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -128,18 +158,3 @@ const styles = StyleSheet.create({
     backgroundColor: "#007AFF",
   },
 });
-
-// [
-//   {
-//     coords: {
-//       accuracy: 5,
-//       altitude: 0,
-//       altitudeAccuracy: -1,
-//       heading: -1,
-//       latitude: -6.151561,
-//       longitude: 106.567459,
-//       speed: -1,
-//     },
-//     timestamp: 1672292483339.215,
-//   },
-// ];

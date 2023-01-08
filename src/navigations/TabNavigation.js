@@ -6,6 +6,7 @@ import { Text } from "react-native";
 import { Octicons } from "@expo/vector-icons";
 import HomePage from "../pages/HomePage";
 import HistoryPage from "../pages/HistoryPage";
+import ProfilePage from "../pages/ProfilePage";
 
 const Tab = createBottomTabNavigator();
 
@@ -60,16 +61,18 @@ export default function TabNavigation({ navigation }) {
         }}
       />
       <Tab.Screen
+        name="Salary"
+        component={HistoryPage}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Octicons name="credit-card" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="ProfilePage"
-        component={() => (
-          <Text
-            onPress={() => {
-              navigation.navigate("LoginPage");
-            }}
-          >
-            Logout
-          </Text>
-        )}
+        component={ProfilePage}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Octicons name="person" size={size} color={color} />
