@@ -127,36 +127,14 @@ const HistoryPage = () => {
                 color: "#3E5BA6",
               }}
             >
-              History Page
+              Salary Page
             </Text>
 
-            <Button title="Clear filter" onPress={clearFilter}/>
-          </View>
-          {/* filter type */}
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginBottom: 10,
-            }}
-          >
-            <Text style={{ fontSize: 16 }}>Filter Type: </Text>
-            <View
-              style={{
-                borderWidth: 1,
-                width: "63%",
-                height: "70%",
-                alignItems: "center",
-                borderRadius: 5,
-                borderColor: "#8c8c8c",
-              }}
-            >
-              <Text>{permitType}</Text>
+            <View style={{flexDirection:"row"}}>
+              <Button title="Clear filter" onPress={clearFilter} />
+              <Button title="Submit" onPress={()=>{}} />
             </View>
-
-            <Button title="Select" onPress={showModal} color="#3E5BA6" />
           </View>
-
           {/* filter date */}
           <View
             style={{

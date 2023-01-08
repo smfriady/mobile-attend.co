@@ -130,7 +130,10 @@ const HistoryPage = () => {
               History Page
             </Text>
 
-            <Button title="Clear filter" onPress={clearFilter}/>
+            <View style={{flexDirection:"row"}}>
+              <Button title="Clear filter" onPress={clearFilter} />
+              <Button title="Submit" onPress={()=>{}} />
+            </View>
           </View>
           {/* filter type */}
           <View

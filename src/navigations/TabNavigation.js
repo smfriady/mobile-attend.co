@@ -7,6 +7,7 @@ import { Octicons } from "@expo/vector-icons";
 import HomePage from "../pages/HomePage";
 import HistoryPage from "../pages/HistoryPage";
 import ProfilePage from "../pages/ProfilePage";
+import SalaryPage from "../pages/SalaryPage"
 
 const Tab = createBottomTabNavigator();
 
@@ -62,7 +63,7 @@ export default function TabNavigation({ navigation }) {
       />
       <Tab.Screen
         name="Salary"
-        component={HistoryPage}
+        component={SalaryPage}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
