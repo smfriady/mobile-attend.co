@@ -7,7 +7,7 @@ import MapView, { Marker } from "react-native-maps";
 export default function Map() {
   const [location, setLocation] = useState(null);
   const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
-  // const [errorMsg, setErrorMsg] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const { width, height } = Dimensions.get("window");
 
@@ -31,24 +31,24 @@ export default function Map() {
     }
   });
 
-  // const locationPermission = async () => {
-  //   const { status: foregroundStatus } =
-  //     await Location.requestForegroundPermissionsAsync();
+  const locationPermission = async () => {
+    const { status: foregroundStatus } =
+      await Location.requestForegroundPermissionsAsync();
 
-  //   if (foregroundStatus === "granted") {
-  //     const { status: backgroundStatus } =
-  //       await Location.requestBackgroundPermissionsAsync();
-  //     if (backgroundStatus === "granted") {
-  //       await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-  //         accuracy: Location.Accuracy.Balanced,
-  //       });
-  //     } else {
-  //       setErrorMsg("Permission to access Background location was denied");
-  //     }
-  //   } else {
-  //     setErrorMsg("Permission to access Foreground location was denied");
-  //   }
-  // };
+    if (foregroundStatus === "granted") {
+      const { status: backgroundStatus } =
+        await Location.requestBackgroundPermissionsAsync();
+      if (backgroundStatus === "granted") {
+        await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+          accuracy: Location.Accuracy.Balanced,
+        });
+      } else {
+        setErrorMsg("Permission to access Background location was denied");
+      }
+    } else {
+      setErrorMsg("Permission to access Foreground location was denied");
+    }
+  };
 
   const getPosition = async () => {
     let location = await Location.getCurrentPositionAsync({});
@@ -72,38 +72,38 @@ export default function Map() {
     }
   }, [location]);
 
-  //   console.log(location);
-  // let text = "Waiting..";
+    // console.log(location);
+  let text = "Waiting..";
 
-  // if (errorMsg) {
-  //   text = errorMsg;
-  //   return (
-  //     <View
-  //       style={{
-  //         width: "100%",
-  //         justifyContent: "center",
-  //         alignItems: "center",
-  //       }}
-  //     >
-  //       <Text>{text}</Text>
-  //     </View>
-  //   );
-  // }
+  if (errorMsg) {
+    text = errorMsg;
+    return (
+      <View
+        style={{
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text>{text}</Text>
+      </View>
+    );
+  }
 
-  // [
-  //   {
-  //     coords: {
-  //       accuracy: 5,
-  //       altitude: 0,
-  //       altitudeAccuracy: -1,
-  //       heading: -1,
-  //       latitude: -6.151561,
-  //       longitude: 106.567459,
-  //       speed: -1,
-  //     },
-  //     timestamp: 1673053633013.4702,
-  //   }
-  // ];
+  [
+    {
+      coords: {
+        accuracy: 5,
+        altitude: 0,
+        altitudeAccuracy: -1,
+        heading: -1,
+        latitude: -6.151561,
+        longitude: 106.567459,
+        speed: -1,
+      },
+      timestamp: 1673053633013.4702,
+    }
+  ];
 
   if (position.latitude && position.longitude)
     return (

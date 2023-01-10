@@ -12,6 +12,8 @@ import { Picker } from "@react-native-picker/picker";
 import CalendarPicker from "react-native-calendar-picker";
 import { Modal, Portal, Provider } from "react-native-paper";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { formatterTable } from "../helpers/formatter";
 
 const HistoryPage = () => {
   const [permitType, setPermitType] = useState("");
@@ -57,60 +59,18 @@ const HistoryPage = () => {
     ? date.selectedEndDate.toISOString().slice(0, 10)
     : "-";
 
+  const attendance = useSelector((state) => state.attendance);
+  console.log("attendance", attendance)
+  const attendanceFormatted = formatterTable(attendance);
+
   const tableHead = [
     "No",
-    "Date",
+    "In",
+    "Out",
     "Type",
-    "Description",
-    "Shift",
-    "Time in",
-    "Time out",
+    "Date",
   ];
-
-  const widthArr = [100, 100, 100, 150, 150, 100, 100, 100];
-
-  const tableData = [
-    [
-      "Monday, 01-20-2020",
-      "Attended",
-      "-",
-      "AK-401 \n(00:00 - 08:00)",
-      "00:15",
-      "08:15",
-    ],
-    [
-      "Monday, 01-20-2020",
-      "Sick",
-      "Cold and flue",
-      "AK-401 \n(00:00 - 08:00)",
-      "-",
-      "-",
-    ],
-    [
-      "Monday, 01-20-2020",
-      "Paid Leave",
-      "Marry",
-      "AK-401 \n(00:00 - 08:00)",
-      "-",
-      "-",
-    ],
-    [
-      "Monday, 01-20-2020",
-      "Permit",
-      "Accident",
-      "AK-401 \n(00:00 - 08:00)",
-      "-",
-      "-",
-    ],
-    [
-      "Monday, 01-20-2020",
-      "Attended",
-      "-",
-      "AK-401 \n(00:00 - 08:00)",
-      "00:15",
-      "08:15",
-    ],
-  ];
+  const widthArr = [64, 84, 84, 150, 160];
 
   return (
     <Provider>
@@ -130,9 +90,9 @@ const HistoryPage = () => {
               History Page
             </Text>
 
-            <View style={{flexDirection:"row"}}>
+            <View style={{ flexDirection: "row" }}>
               <Button title="Clear filter" onPress={clearFilter} />
-              <Button title="Submit" onPress={()=>{}} />
+              <Button title="Submit" onPress={() => {}} />
             </View>
           </View>
           {/* filter type */}
@@ -241,7 +201,7 @@ const HistoryPage = () => {
               </Table>
               <ScrollView style={{ marginTop: -1 }}>
                 <Table>
-                  {tableData.map((el, i) => {
+                  {attendanceFormatted.map((el, i) => {
                     const styleColor =
                       i % 2
                         ? { backgroundColor: "#EAEEFF" }
@@ -250,7 +210,7 @@ const HistoryPage = () => {
                     return (
                       <Row
                         key={i}
-                        data={[i + 1, ...tableData[i]]}
+                        data={[i + 1, ...attendanceFormatted[i]]}
                         widthArr={widthArr}
                         textStyle={{
                           textAlign: "center",
@@ -261,7 +221,7 @@ const HistoryPage = () => {
                           ...styleColor,
                           marginVertical: 5,
                           borderRadius: 10,
-                          padding: 5,
+                          paddingVertical: 8,
                         }}
                       />
                     );

@@ -1,3 +1,5 @@
+import { Provider } from "react-redux";
+import store from "./src/store";
 import { NavigationContainer } from "@react-navigation/native";
 import MainNavigation from "./src/navigations/MainNavigation";
 import { LogBox } from "react-native";
@@ -32,28 +34,36 @@ export default function App() {
   useEffect(() => {
     locationPermission();
   }, []);
-  
-  let region = {identifier:1, latitude:51.5572754, longitude:-0.2702119, radius:10}
-    Location.startGeofencingAsync("LOCATION_GEOFENCE", [region])
 
-    TaskManager.defineTask("LOCATION_GEOFENCE", ({ data: { eventType, region }, error }) => {
-        if (error) {
-          // check `error.message` for more details.
-          return;
-        }
-        if (eventType === Location.GeofencingEventType.Enter) {
-          alert("enter in region!")
-          console.log("You've entered region:", region);
-        } else if (eventType === Location.GeofencingEventType.Exit) {
-          console.log("You've left region:", region);
-        }
-      });
-    
-      
+  let region = {
+    identifier: 1,
+    latitude: 51.5572754,
+    longitude: -0.2702119,
+    radius: 10,
+  };
+  Location.startGeofencingAsync("LOCATION_GEOFENCE", [region]);
+
+  TaskManager.defineTask(
+    "LOCATION_GEOFENCE",
+    ({ data: { eventType, region }, error }) => {
+      if (error) {
+        // check `error.message` for more details.
+        return;
+      }
+      if (eventType === Location.GeofencingEventType.Enter) {
+        alert("enter in region!");
+        console.log("You've entered region:", region);
+      } else if (eventType === Location.GeofencingEventType.Exit) {
+        console.log("You've left region:", region);
+      }
+    }
+  );
 
   return (
-    <NavigationContainer>
-      <MainNavigation />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <MainNavigation />
+      </NavigationContainer>
+    </Provider>
   );
 }

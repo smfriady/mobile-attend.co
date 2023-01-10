@@ -25,16 +25,18 @@ export default function AttendForm() {
           <ActivityIndicator size={"large"} />
         </View>
       ) : null}
-      {/* <View style={{ overflow: "hidden", height: 300 }}>
+      <View style={{ overflow: "hidden", height: 300 }}>
         <Image
           source={location}
           style={loading ? {} : { height: "200%", width: "100%", bottom: 150 }}
           onLoadStart={() => setLoading(true)}
           onLoadEnd={() => setLoading(false)}
         />
-      </View> */}
+      </View>
       <Map />
       <ImagePickerExample />
     </SafeAreaView>
   );
 }
+
+// seeding history

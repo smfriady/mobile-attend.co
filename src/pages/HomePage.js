@@ -4,26 +4,24 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
-  FlatList,
   ScrollView,
   StyleSheet,
+  Dimensions,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Table, Row } from "react-native-table-component";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAttendance } from "../store/actions/actions";
+import { formatterTable } from "../helpers/formatter";
 
 export default function HomePage({ navigation }) {
-  const tableHead = ["No", "Date", "Type"];
-
-  const widthArr = [100, 100, 164];
-
-  const tableData = [
-    ["Monday, 01-20-2020", "Attended"],
-    ["Monday, 01-20-2020", "Sick"],
-    ["Monday, 01-20-2020", "Paid Leave"],
-    ["Monday, 01-20-2020", "Accident"],
-    ["Monday, 01-20-2020", "Attended"],
-  ];
+  const attendance = useSelector((state) => state.attendance);
+  const attendanceFormatted = formatterTable(attendance)
+  const tableHead = ["No", "In", "Out", "Type"];
+  const widthArr = [64, 86, 86, 128 ];
+  
+  const dispatch = useDispatch();
 
   const goToFormAttend = () => {
     navigation.navigate("AttendForm");
@@ -31,6 +29,10 @@ export default function HomePage({ navigation }) {
   const goToFormPermit = () => {
     navigation.navigate("PermitForm");
   };
+
+  useEffect(() => {
+    dispatch(fetchAttendance());
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F8FF" }}>
@@ -195,7 +197,8 @@ export default function HomePage({ navigation }) {
               color: "#444655",
               fontWeight: "bold",
               letterSpacing: 2,
-              marginBottom: 10,
+              marginBottom: 12,
+              marginTop: 16,
             }}
           >
             History
@@ -222,7 +225,8 @@ export default function HomePage({ navigation }) {
               </Table>
               <ScrollView style={{ marginTop: -1 }}>
                 <Table>
-                  {tableData.map((el, i) => {
+                  {attendanceFormatted.map((el, i) => {
+                    if (i > 5) return <></>;
                     const styleColor =
                       i % 2
                         ? { backgroundColor: "#EAEEFF" }
@@ -231,7 +235,7 @@ export default function HomePage({ navigation }) {
                     return (
                       <Row
                         key={i}
-                        data={[i + 1, ...tableData[i]]}
+                        data={[i + 1, ...attendanceFormatted[i]]}
                         widthArr={widthArr}
                         textStyle={{
                           textAlign: "center",
@@ -242,7 +246,8 @@ export default function HomePage({ navigation }) {
                           ...styleColor,
                           marginVertical: 5,
                           borderRadius: 10,
-                          padding: 5,
+                          paddingVertical: 10,
+                          paddingHorizontal: 5,
                         }}
                       />
                     );

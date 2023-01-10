@@ -11,12 +11,19 @@ import {
 import React, { createRef, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { loginEmployee } from "../store/actions/actions";
+import { useDispatch } from "react-redux";
 
 export default function LoginPage({ navigation }) {
   const [onFocus, setOnFocus] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
   const handleSubmit = () => {
-    navigation.navigate("TabNavigation");
+    dispatch(loginEmployee({ email, password }))
+      .then(() => navigation.navigate("TabNavigation"))
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -62,6 +69,8 @@ export default function LoginPage({ navigation }) {
               spellCheck={false}
               selectionColor="#3E5BA6"
               placeholder="Enter your email..."
+              onChangeText={setEmail}
+              value={email}
               onFocus={() => {
                 setOnFocus("email");
               }}
@@ -111,6 +120,9 @@ export default function LoginPage({ navigation }) {
               spellCheck={false}
               selectionColor="#3E5BA6"
               placeholder="Enter your password..."
+              name="password"
+              onChangeText={setPassword}
+              value={password}
               secureTextEntry={true}
               onFocus={() => {
                 setOnFocus("password");
