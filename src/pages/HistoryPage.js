@@ -12,10 +12,12 @@ import { Picker } from "@react-native-picker/picker";
 import CalendarPicker from "react-native-calendar-picker";
 import { Modal, Portal, Provider } from "react-native-paper";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { formatterTable } from "../helpers/formatter";
+import { fetchAttendance } from "../store/actions/actions";
 
 const HistoryPage = () => {
+  const dispatch = useDispatch();
   const [permitType, setPermitType] = useState("");
   const [date, setDate] = useState({
     selectedStartDate: null,
@@ -49,6 +51,7 @@ const HistoryPage = () => {
       selectedEndDate: null,
     });
     setPermitType("");
+    dispatch(fetchAttendance());
   };
 
   const startDate = date.selectedStartDate
@@ -61,6 +64,16 @@ const HistoryPage = () => {
 
   const attendance = useSelector((state) => state.attendance);
   const attendanceFormatted = formatterTable(attendance);
+
+  const submitFilter = () => {
+    const filter = {
+      attendanceType: permitType,
+      startDate: date.selectedStartDate,
+      endDate: date.selectedEndDate
+    };
+
+    dispatch(fetchAttendance(filter));
+  };
 
   const tableHead = ["No", "In", "Out", "Type", "Date"];
   const widthArr = [64, 84, 84, 150, 160];
@@ -85,7 +98,7 @@ const HistoryPage = () => {
 
             <View style={{ flexDirection: "row" }}>
               <Button title="Clear filter" onPress={clearFilter} />
-              <Button title="Submit" onPress={() => {}} />
+              <Button title="Submit" onPress={submitFilter} />
             </View>
           </View>
           {/* filter type */}
@@ -165,9 +178,10 @@ const HistoryPage = () => {
                 selectedValue={permitType}
                 onValueChange={(itemValue) => setPermitType(itemValue)}
               >
-                <Picker.Item label="Paid Leave" value="Paid Leave" />
-                <Picker.Item label="Sick" value="Sick" />
-                <Picker.Item label="Permit" value="Permit" />
+                <Picker.Item label="Paid Leave" value="paid leave" />
+                <Picker.Item label="Sick" value="sick" />
+                <Picker.Item label="Absent" value="Absent" />
+                <Picker.Item label="Attendance" value="attendance" />
               </Picker>
               <Button title="Close" onPress={hideModal}></Button>
             </Modal>
