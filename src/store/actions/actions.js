@@ -41,8 +41,9 @@ export const logoutEmployee = () => {
   };
 };
 
-export const fetchAttendance = () => {
+export const fetchAttendance = (filter) => {
   return async (dispatch) => {
+    console.log(filter);
     const employee = await AsyncStorage.getItem("employee");
     const { access_token } = JSON.parse(employee);
     try {
@@ -53,6 +54,23 @@ export const fetchAttendance = () => {
           Authorization: `Bearer ${access_token}`,
         },
       });
+
+      if (filter) {
+        let filteredData;
+        filteredData = data.filter(
+          (el) => {
+            // console.log(el.check_in_time.toString().slice(0,10) === filter.startDate.toISOString().slice(0,10) && el.check_in_time.toString().slice(0,10) === filter.endDate.toISOString().slice(0,10))
+            return el.attendance_type === filter.attendance_type &&
+            el.check_in_time.toString().slice(0,10) === filter.startDate.toISOString().slice(0,10) && el.check_in_time.toString().slice(0,10) === filter.endDate.toISOString().slice(0,10)
+          }
+        );
+
+        return dispatch({
+          type: FETCH_ATTENDANCE_SUCCESS,
+          payload: filteredData,
+        });
+      }
+
       dispatch({
         type: FETCH_ATTENDANCE_SUCCESS,
         payload: data,
