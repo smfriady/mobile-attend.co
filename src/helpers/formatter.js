@@ -12,14 +12,22 @@ export const formatterTable = (array) => {
         arr.push(timeFormatted);
       }
       if (val === "checkOutTime" && item[val] === null) {
-        arr.push("-:-")
+        arr.push("-:-");
       }
       if (val === "attendanceType") {
         arr.push(item[val]);
       }
-      if (val === "date") {
+      if (val === "amount") {
+        const currencyFormatted = formattedCurrency(item[val]);
+        arr.push(currencyFormatted);
+      }
+      if (val === "date" || val === "paymentDate") {
         const dateFormatted = formattedDate(new Date(item[val]));
         arr.push(dateFormatted);
+      }
+      if (val === "periodeSalary") {
+        const monthFormatted = formattedMonth(new Date(item[val]));
+        arr.push(monthFormatted);
       }
     }
     return arr;
@@ -44,6 +52,14 @@ export const formattedDate = (date) => {
   return date.toLocaleDateString("en-US", options);
 };
 
+export const formattedMonth = (date) => {
+  const options = {
+    year: "numeric",
+    month: "long",
+  };
+  return date.toLocaleDateString("en-US", options);
+};
+
 const duplicateCheckIn = (array) => {
   const data = array.map((item) => {
     const obj = {
@@ -53,4 +69,13 @@ const duplicateCheckIn = (array) => {
     return obj;
   });
   return data;
+};
+
+export const formattedCurrency = (value) => {
+  return new Intl.NumberFormat("en-ID", {
+    style: "currency",
+    currency: "IDR",
+  })
+    .format(value)
+    .replace(/\.00$/, "");
 };

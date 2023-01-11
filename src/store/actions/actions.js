@@ -3,6 +3,7 @@ import {
   COORDINATE_EMPLOYEE,
   FETCH_ATTENDANCE_SUCCESS,
   FETCH_EMPLOYEE_SUCCESS,
+  FETCH_SALARIES_SUCCESS,
   LOGIN_EMPLOYEE_SUCCESS,
 } from "./types";
 import axios from "axios";
@@ -59,16 +60,14 @@ export const fetchAttendance = (filter) => {
       if (filter) {
         let filteredData;
         filteredData = data.filter((el) => {
-          // console.log(el.check_in_time.toString().slice(0,10) === filter.startDate.toISOString().slice(0,10) && el.check_in_time.toString().slice(0,10) === filter.endDate.toISOString().slice(0,10))
           return (
             el.attendanceType === filter.attendanceType &&
-            el.checkInTime.toString().slice(0, 10) ===
-              filter.startDate.toISOString().slice(0, 10) &&
-            el.checkInTime.toString().slice(0, 10) ===
-              filter.endDate.toISOString().slice(0, 10)
+            Date.parse(el.checkInTime.toString().slice(0, 10)) >=
+              Date.parse(filter.startDate.toISOString().slice(0, 10)) &&
+            Date.parse(el.checkInTime.toString().slice(0, 10)) <=
+              Date.parse(filter.endDate.toISOString().slice(0, 10))
           );
         });
-
         return dispatch({
           type: FETCH_ATTENDANCE_SUCCESS,
           payload: filteredData,
@@ -158,6 +157,29 @@ export const updateAttendance = (payload) => {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${access_token}`,
         },
+      });
+      dispatch(fetchAttendance());
+    } catch (err) {
+      throw err;
+    }
+  };
+};
+
+export const fetchSalaries = () => {
+  return async (dispatch) => {
+    const employee = await AsyncStorage.getItem("employee");
+    const { access_token } = JSON.parse(employee);
+    try {
+      const { data } = await axios({
+        method: "GET",
+        url: `${BASE_URL}/salaries`,
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      dispatch({
+        type: FETCH_SALARIES_SUCCESS,
+        payload: data,
       });
     } catch (err) {
       throw err;

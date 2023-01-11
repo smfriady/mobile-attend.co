@@ -8,117 +8,35 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Table, Row } from "react-native-table-component";
-import { Picker } from "@react-native-picker/picker";
-import CalendarPicker from "react-native-calendar-picker";
-import { Modal, Portal, Provider } from "react-native-paper";
-import { useState } from "react";
+import { Provider } from "react-native-paper";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSalaries } from "../store/actions/actions";
+import { formatterTable } from "../helpers/formatter";
 
 const HistoryPage = () => {
-  const [permitType, setPermitType] = useState("");
-  const [date, setDate] = useState({
-    selectedStartDate: null,
-    selectedEndDate: null,
-  });
-  const [show, setShow] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [formattedSalary, setFormattedSalary] = useState([]);
+  const dispatch = useDispatch();
 
-  const showModal = () => setShow(true);
-  const hideModal = () => setShow(false);
-  const containerStyle = { backgroundColor: "white", padding: 20 };
+  const salaries = useSelector((state) => state.salaries);
 
-  const onDateChange = (dateNow, type) => {
-    if (type === "END_DATE") {
-      setDate({
-        ...date,
-        selectedEndDate: dateNow,
-      });
-      setShowCalendar(false);
-    } else {
-      setDate({
-        ...date,
-        selectedStartDate: dateNow,
-      });
-    }
-  };
+  useEffect(() => {
+    dispatch(fetchSalaries());
+  }, [dispatch]);
 
-  const clearFilter = () => {
-    setDate({
-      selectedStartDate: null,
-      selectedEndDate: null,
-    });
-    setPermitType("");
-  };
+  useEffect(() => {
+    setFormattedSalary(formatterTable(salaries));
+  }, [salaries]);
 
-  const startDate = date.selectedStartDate
-    ? date.selectedStartDate.toISOString().slice(0, 10)
-    : "-";
+  const tableHead = ["No", "Amount", "Payment Date", "Period Salary"];
+  const widthArr = [60, 140, 130, 150];
 
-  const endDate = date.selectedEndDate
-    ? date.selectedEndDate.toISOString().slice(0, 10)
-    : "-";
-
-  const tableHead = [
-    "No",
-    "Date",
-    "Type",
-    "Description",
-    "Shift",
-    "Time in",
-    "Time out",
-  ];
-
-  const widthArr = [100, 100, 100, 150, 150, 100, 100, 100];
-
-  const tableData = [
-    [
-      "Monday, 01-20-2020",
-      "Attended",
-      "-",
-      "AK-401 \n(00:00 - 08:00)",
-      "00:15",
-      "08:15",
-    ],
-    [
-      "Monday, 01-20-2020",
-      "Sick",
-      "Cold and flue",
-      "AK-401 \n(00:00 - 08:00)",
-      "-",
-      "-",
-    ],
-    [
-      "Monday, 01-20-2020",
-      "Paid Leave",
-      "Marry",
-      "AK-401 \n(00:00 - 08:00)",
-      "-",
-      "-",
-    ],
-    [
-      "Monday, 01-20-2020",
-      "Permit",
-      "Accident",
-      "AK-401 \n(00:00 - 08:00)",
-      "-",
-      "-",
-    ],
-    [
-      "Monday, 01-20-2020",
-      "Attended",
-      "-",
-      "AK-401 \n(00:00 - 08:00)",
-      "00:15",
-      "08:15",
-    ],
-  ];
 
   return (
     <Provider>
       <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F8FF" }}>
-        <View style={{ flex: 1, paddingVertical: 20, paddingHorizontal: 15 }}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
+        <View style={{ flex: 1, paddingVertical: 20, paddingHorizontal: 24 }}>
+          <View>
             <Text
               style={{
                 fontSize: 20,
@@ -127,73 +45,9 @@ const HistoryPage = () => {
                 color: "#3E5BA6",
               }}
             >
-              Salary Page
+              Payroll
             </Text>
-
-            <View style={{flexDirection:"row"}}>
-              <Button title="Clear filter" onPress={clearFilter} />
-              <Button title="Submit" onPress={()=>{}} />
-            </View>
           </View>
-          {/* filter date */}
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginBottom: 10,
-            }}
-          >
-            <Text style={{ fontSize: 16 }}>Filter Date: </Text>
-            <View
-              style={{
-                borderWidth: 1,
-                width: "63%",
-                height: "70%",
-                alignItems: "center",
-                borderRadius: 5,
-                borderColor: "#8c8c8c",
-              }}
-            >
-              <Text>{startDate + " until " + endDate}</Text>
-            </View>
-
-            <Button
-              title="Select"
-              onPress={() => setShowCalendar(true)}
-              color="#3E5BA6"
-            />
-          </View>
-
-          {showCalendar ? (
-            <CalendarPicker
-              startFromMonday={true}
-              allowRangeSelection={true}
-              todayBackgroundColor="#f2e6ff"
-              selectedDayColor="#7300e6"
-              selectedDayTextColor="#FFFFFF"
-              onDateChange={onDateChange}
-            />
-          ) : (
-            ""
-          )}
-
-          <Portal>
-            <Modal
-              visible={show}
-              onDismiss={hideModal}
-              contentContainerStyle={containerStyle}
-            >
-              <Picker
-                selectedValue={permitType}
-                onValueChange={(itemValue) => setPermitType(itemValue)}
-              >
-                <Picker.Item label="Paid Leave" value="Paid Leave" />
-                <Picker.Item label="Sick" value="Sick" />
-                <Picker.Item label="Permit" value="Permit" />
-              </Picker>
-              <Button title="Close" onPress={hideModal}></Button>
-            </Modal>
-          </Portal>
           <ScrollView horizontal={true}>
             <View>
               <Table>
@@ -216,7 +70,7 @@ const HistoryPage = () => {
               </Table>
               <ScrollView style={{ marginTop: -1 }}>
                 <Table>
-                  {tableData.map((el, i) => {
+                  {formattedSalary.map((el, i) => {
                     const styleColor =
                       i % 2
                         ? { backgroundColor: "#EAEEFF" }
@@ -225,7 +79,7 @@ const HistoryPage = () => {
                     return (
                       <Row
                         key={i}
-                        data={[i + 1, ...tableData[i]]}
+                        data={[i + 1, ...formattedSalary[i]]}
                         widthArr={widthArr}
                         textStyle={{
                           textAlign: "center",
@@ -245,13 +99,6 @@ const HistoryPage = () => {
               </ScrollView>
             </View>
           </ScrollView>
-          <View style={{ flexDirection: "row", justifyContent: "center" }}>
-            <Button title="Previous" color={"#3E5BA6"} />
-            <Button title="1" color={"#3E5BA6"} />
-            <Button title="2" color={"#3E5BA6"} />
-            <Button title="3" color={"#3E5BA6"} />
-            <Button title="Next" color={"#3E5BA6"} />
-          </View>
         </View>
       </SafeAreaView>
     </Provider>

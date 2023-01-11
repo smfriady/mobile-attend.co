@@ -7,7 +7,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Table, Row } from "react-native-table-component";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,16 +18,16 @@ import {
 } from "../store/actions/actions";
 import { formatterTable, formattedDate } from "../helpers/formatter";
 import { useFocusEffect } from "@react-navigation/native";
-import { useToast } from "react-native-toast-notifications";
+import useToaster from "../helpers/toast";
 
 export default function HomePage({ navigation }) {
+  const [attendanceFormatted, setAttendanceFormatted] = useState([]);
   const dispatch = useDispatch();
-  const toast = useToast();
+  const { showToast } = useToaster();
   const attendance = useSelector((state) => state.attendance);
   const profile = useSelector((state) => state.profile);
-  const long = useSelector((state) => state.long);
-  const lat = useSelector((state) => state.lat);
-  const attendanceFormatted = formatterTable(attendance);
+  const longitude = useSelector((state) => state.long);
+  const latidude = useSelector((state) => state.lat);
 
   const tableHead = ["No", "In", "Out", "Type"];
   const widthArr = [64, 86, 86, 128];
@@ -35,28 +35,33 @@ export default function HomePage({ navigation }) {
   const goToFormAttend = () => {
     navigation.navigate("AttendForm");
   };
+
   const handleSubmit = () => {
     dispatch(
       updateAttendance({
-        long,
-        lat,
+        longitude,
+        latidude,
         attendanceType: "attendance",
         checkOutTime: new Date().toISOString(),
       })
     )
       .then(() => {
-        toast.show("Check out successfully! see you.", { type: "success" });
+        showToast({ val: "Check out successfully! see you." });
       })
-      .catch((err) => toast.show("Check in first!", { type: "danger" }));
+      .catch((err) => showToast({ val: "Check in first!", type: "danger" }));
   };
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       dispatch(fetchAttendance());
       dispatch(fetchEmployee());
       dispatch(updateAttendance());
     }, [dispatch])
   );
+
+  useEffect(() => {
+    setAttendanceFormatted(formatterTable(attendance));
+  }, [attendance]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F8FF" }}>
@@ -128,11 +133,12 @@ export default function HomePage({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: 10,
+                fontSize: 12,
                 color: "#F7F8FF",
-                paddingBottom: 20,
+                paddingBottom: 16,
                 paddingTop: 8,
-                marginLeft: 40,
+                marginLeft: 88,
+                width: 120,
               }}
             >
               {formattedDate(new Date())}
@@ -157,7 +163,9 @@ export default function HomePage({ navigation }) {
                 Check In
               </Text>
               {attendanceFormatted.length > 0 &&
-              attendanceFormatted[0][0] !== null ? (
+              attendanceFormatted[0][0] !== null &&
+              new Date(attendance[0]?.checkInTime).getDate() ==
+                new Date().getDate() ? (
                 <>
                   <Text
                     style={{

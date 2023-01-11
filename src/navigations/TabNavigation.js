@@ -6,7 +6,7 @@ import { Octicons } from "@expo/vector-icons";
 import HomePage from "../pages/HomePage";
 import HistoryPage from "../pages/HistoryPage";
 import ProfilePage from "../pages/ProfilePage";
-import SalaryPage from "../pages/SalaryPage"
+import SalaryPage from "../pages/SalaryPage";
 
 const Tab = createBottomTabNavigator();
 
@@ -74,6 +74,7 @@ export default function TabNavigation({ navigation }) {
         name="Profile"
         component={ProfilePage}
         options={{
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Octicons name="person" size={size} color={color} />
           ),

@@ -9,24 +9,24 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutEmployee } from "../store/actions/actions";
-import { useToast } from "react-native-toast-notifications";
+import useToaster from "../helpers/toast";
 
 export default function ProfilePage({ navigation }) {
   const profile = useSelector((state) => state.profile);
   const dispath = useDispatch();
-  const toast = useToast();
+  const { showToast } = useToaster();
 
   const handleLogout = () => {
     dispath(logoutEmployee())
       .then(() => {
-        toast.show("Logout successfully", { type: "success" });
+        showToast({ val: "Logout successfully" });
         navigation.navigate("LoginPage");
       })
-      .catch((err) => toast.show("You're not login", { type: "danger" }));
+      .catch((err) => showToast({ val: "You're not login", type: "danger" }));
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#F7F8FF" }}>
+    <SafeAreaView style={{ backgroundColor: "#EAEEFF", flex: 1}}>
       <View style={{ alignItems: "center", marginTop: 30 }}>
         <Image
           source={{
@@ -43,7 +43,9 @@ export default function ProfilePage({ navigation }) {
         style={{
           alignItems: "flex-start",
           marginHorizontal: 35,
-          marginVertical: 25,
+          marginVertical: 24,
+          borderRadius: 12,
+          backgroundColor: "#878EBA",
         }}
       >
         <Text style={styles.text}>NIK : {profile.nik}</Text>
@@ -77,7 +79,10 @@ export default function ProfilePage({ navigation }) {
 
 const styles = StyleSheet.create({
   text: {
-    marginVertical: 5,
+    marginVertical: 16,
+    marginHorizontal: 16,
     fontSize: 16,
+    color: "#fff",
+    fontWeight: "bold"
   },
 });

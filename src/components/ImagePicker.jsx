@@ -4,7 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useDispatch } from "react-redux";
 import { createAttendance } from "../store/actions/actions";
 import * as geolib from "geolib";
-import { useToast } from "react-native-toast-notifications";
+import useToaster from "../helpers/toast";
 
 export default function ImagePickerExample({
   latitude,
@@ -16,7 +16,7 @@ export default function ImagePickerExample({
   const [image, setImage] = useState(null);
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const dispatch = useDispatch();
-  const toast = useToast();
+  const { showToast } = useToaster();
 
   const pickImage = async () => {
     await requestPermission();
@@ -49,16 +49,17 @@ export default function ImagePickerExample({
         })
       )
         .then(() => {
-          toast.show(`Check in successfully`, {
-            type: "success",
-          });
+          showToast({ val: "Check in successfully" });
           navigation.navigate("Home");
         })
         .catch(() =>
-          toast.show(`You're already check in`, { type: "danger" })
+          showToast({ val: "You're already check in", type: "danger" })
         );
     } else {
-      toast.show(`Can't check in, you're out of range!`, { type: "danger" });
+      showToast({
+        val: "Can't check in, you're out of range!",
+        type: "danger",
+      });
     }
   };
 

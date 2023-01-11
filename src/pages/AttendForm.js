@@ -1,13 +1,4 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  Image,
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  Button,
-} from "react-native";
+import { View, SafeAreaView, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 import ImagePickerExample from "../components/ImagePicker";
 import Map from "../components/Map";

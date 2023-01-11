@@ -2,11 +2,13 @@ import {
   COORDINATE_EMPLOYEE,
   FETCH_ATTENDANCE_SUCCESS,
   FETCH_EMPLOYEE_SUCCESS,
+  FETCH_SALARIES_SUCCESS,
   LOGIN_EMPLOYEE_SUCCESS,
 } from "../actions/types";
 
 const initialState = {
   attendance: [],
+  salaries: [],
   employee: {},
   profile: {},
   long: 0,
@@ -35,6 +37,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         lat: action.latitude,
         long: action.longitude,
+      };
+    case FETCH_SALARIES_SUCCESS:
+      return {
+        ...state,
+        salaries: action.payload,
       };
     default:
       return state;
