@@ -9,12 +9,15 @@ import {
   Button,
 } from "react-native";
 import React, { useState } from "react";
-import location from "../assets/hacktivLoc.png";
 import ImagePickerExample from "../components/ImagePicker";
 import Map from "../components/Map";
 
-export default function AttendForm() {
+export default function AttendForm({ navigation }) {
   const [loading, setLoading] = useState(false);
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
+  const LATITUDE_COMPANY = -6.260708682144789;
+  const LONGITUDE_COMPANY = 106.78154752570748;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F8FF" }}>
@@ -25,16 +28,19 @@ export default function AttendForm() {
           <ActivityIndicator size={"large"} />
         </View>
       ) : null}
-      <View style={{ overflow: "hidden", height: 300 }}>
-        <Image
-          source={location}
-          style={loading ? {} : { height: "200%", width: "100%", bottom: 150 }}
-          onLoadStart={() => setLoading(true)}
-          onLoadEnd={() => setLoading(false)}
-        />
-      </View>
-      <Map />
-      <ImagePickerExample />
+      <Map
+        setLatitude={setLatitude}
+        setLongitude={setLongitude}
+        LATITUDE_COMPANY={LATITUDE_COMPANY}
+        LONGITUDE_COMPANY={LONGITUDE_COMPANY}
+      />
+      <ImagePickerExample
+        latitude={latitude}
+        longitude={longitude}
+        navigation={navigation}
+        LATITUDE_COMPANY={LATITUDE_COMPANY}
+        LONGITUDE_COMPANY={LONGITUDE_COMPANY}
+      />
     </SafeAreaView>
   );
 }

@@ -7,16 +7,22 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutEmployee } from "../store/actions/actions";
+import { useToast } from "react-native-toast-notifications";
 
 export default function ProfilePage({ navigation }) {
+  const profile = useSelector((state) => state.profile);
   const dispath = useDispatch();
+  const toast = useToast();
 
   const handleLogout = () => {
     dispath(logoutEmployee())
-      .then(() => navigation.navigate("LoginPage"))
-      .catch((err) => console.log(err));
+      .then(() => {
+        toast.show("Logout successfully", { type: "success" });
+        navigation.navigate("LoginPage");
+      })
+      .catch((err) => toast.show("You're not login", { type: "danger" }));
   };
 
   return (
@@ -24,14 +30,14 @@ export default function ProfilePage({ navigation }) {
       <View style={{ alignItems: "center", marginTop: 30 }}>
         <Image
           source={{
-            uri: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+            uri: profile.imgProfile,
           }}
-          style={{ height: 150, width: 150 }}
+          style={{ height: 150, width: 150, borderRadius: "50%" }}
         />
         <Text style={{ marginVertical: 10, fontSize: 20, fontWeight: "bold" }}>
-          Name
+          {profile.firstName} {profile.lastName}
         </Text>
-        <Text style={{ fontSize: 16 }}>Division</Text>
+        <Text style={{ fontSize: 16 }}>{profile?.Department?.name}</Text>
       </View>
       <View
         style={{
@@ -40,10 +46,10 @@ export default function ProfilePage({ navigation }) {
           marginVertical: 25,
         }}
       >
-        <Text style={styles.text}>NIK : </Text>
-        <Text style={styles.text}>AGE : </Text>
-        <Text style={styles.text}>EDUCATION : </Text>
-        <Text style={styles.text}>ADDRESS : </Text>
+        <Text style={styles.text}>NIK : {profile.nik}</Text>
+        <Text style={styles.text}>EMAIL : {profile.email}</Text>
+        <Text style={styles.text}>ROLE : {profile?.Role?.name}</Text>
+        <Text style={styles.text}>EDUCATION : {profile.education}</Text>
       </View>
       <TouchableOpacity
         style={{

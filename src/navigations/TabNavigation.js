@@ -2,7 +2,6 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getHeaderTitle } from "@react-navigation/elements";
 import MyHeader from "../components/MyHeader";
-import { Text } from "react-native";
 import { Octicons } from "@expo/vector-icons";
 import HomePage from "../pages/HomePage";
 import HistoryPage from "../pages/HistoryPage";
@@ -72,7 +71,7 @@ export default function TabNavigation({ navigation }) {
         }}
       />
       <Tab.Screen
-        name="ProfilePage"
+        name="Profile"
         component={ProfilePage}
         options={{
           tabBarIcon: ({ color, size }) => (

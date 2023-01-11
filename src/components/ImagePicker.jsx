@@ -1,10 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { Button, Image, View, Platform, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { Button, Image, View, TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useDispatch } from "react-redux";
+import { createAttendance } from "../store/actions/actions";
+import * as geolib from "geolib";
+import { useToast } from "react-native-toast-notifications";
 
-export default function ImagePickerExample() {
+export default function ImagePickerExample({
+  latitude,
+  longitude,
+  LATITUDE_COMPANY,
+  LONGITUDE_COMPANY,
+  navigation,
+}) {
   const [image, setImage] = useState(null);
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
+  const dispatch = useDispatch();
+  const toast = useToast();
 
   const pickImage = async () => {
     await requestPermission();
@@ -21,8 +33,33 @@ export default function ImagePickerExample() {
     }
   };
 
-  const submit = () => {
-    console.log("berhasil submit");
+  const handleSubmit = () => {
+    const distance = geolib.getDistance(
+      { latitude, longitude },
+      { latitude: LATITUDE_COMPANY, longitude: LONGITUDE_COMPANY }
+    );
+    if (distance < 100) {
+      dispatch(
+        createAttendance({
+          latitude,
+          longitude,
+          attachment: image,
+          attendanceType: "absent",
+          checkInTime: new Date().toISOString(),
+        })
+      )
+        .then(() => {
+          toast.show(`Check in successfully`, {
+            type: "success",
+          });
+          navigation.navigate("Home");
+        })
+        .catch(() =>
+          toast.show(`You're already check in`, { type: "danger" })
+        );
+    } else {
+      toast.show(`Can't check in, you're out of range!`, { type: "danger" });
+    }
   };
 
   return (
@@ -61,7 +98,7 @@ export default function ImagePickerExample() {
           borderRadius: 10,
         }}
       >
-        <Button title="Submit" onPress={submit} color="#F6F8FF" />
+        <Button title="Submit" onPress={handleSubmit} color="#F6F8FF" />
       </TouchableOpacity>
     </View>
   );

@@ -60,16 +60,9 @@ const HistoryPage = () => {
     : "-";
 
   const attendance = useSelector((state) => state.attendance);
-  console.log("attendance", attendance)
   const attendanceFormatted = formatterTable(attendance);
 
-  const tableHead = [
-    "No",
-    "In",
-    "Out",
-    "Type",
-    "Date",
-  ];
+  const tableHead = ["No", "In", "Out", "Type", "Date"];
   const widthArr = [64, 84, 84, 150, 160];
 
   return (
@@ -87,7 +80,7 @@ const HistoryPage = () => {
                 color: "#3E5BA6",
               }}
             >
-              History Page
+              History List
             </Text>
 
             <View style={{ flexDirection: "row" }}>
@@ -230,13 +223,6 @@ const HistoryPage = () => {
               </ScrollView>
             </View>
           </ScrollView>
-          <View style={{ flexDirection: "row", justifyContent: "center" }}>
-            <Button title="Previous" color={"#3E5BA6"} />
-            <Button title="1" color={"#3E5BA6"} />
-            <Button title="2" color={"#3E5BA6"} />
-            <Button title="3" color={"#3E5BA6"} />
-            <Button title="Next" color={"#3E5BA6"} />
-          </View>
         </View>
       </SafeAreaView>
     </Provider>

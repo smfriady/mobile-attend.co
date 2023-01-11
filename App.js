@@ -6,6 +6,7 @@ import { LogBox } from "react-native";
 import * as TaskManager from "expo-task-manager";
 import * as Location from "expo-location";
 import { useEffect } from "react";
+import { ToastProvider } from "react-native-toast-notifications";
 
 export default function App() {
   LogBox.ignoreLogs([
@@ -61,9 +62,25 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <MainNavigation />
-      </NavigationContainer>
+      <ToastProvider
+        placement="bottom"
+        duration={3000}
+        animationType="slide-in | zoom-in"
+        animationDuration={250}
+        successColor="green"
+        dangerColor="red"
+        warningColor="orange"
+        normalColor="gray"
+        textStyle={{ fontSize: 20 }}
+        offset={50}
+        offsetTop={30}
+        offsetBottom={40}
+        swipeEnabled={true}
+      >
+        <NavigationContainer>
+          <MainNavigation />
+        </NavigationContainer>
+      </ToastProvider>
     </Provider>
   );
 }

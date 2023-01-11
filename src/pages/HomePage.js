@@ -6,33 +6,57 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  Dimensions,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Table, Row } from "react-native-table-component";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAttendance } from "../store/actions/actions";
-import { formatterTable } from "../helpers/formatter";
+import {
+  fetchAttendance,
+  fetchEmployee,
+  updateAttendance,
+} from "../store/actions/actions";
+import { formatterTable, formattedDate } from "../helpers/formatter";
+import { useFocusEffect } from "@react-navigation/native";
+import { useToast } from "react-native-toast-notifications";
 
 export default function HomePage({ navigation }) {
-  const attendance = useSelector((state) => state.attendance);
-  const attendanceFormatted = formatterTable(attendance)
-  const tableHead = ["No", "In", "Out", "Type"];
-  const widthArr = [64, 86, 86, 128 ];
-  
   const dispatch = useDispatch();
+  const toast = useToast();
+  const attendance = useSelector((state) => state.attendance);
+  const profile = useSelector((state) => state.profile);
+  const long = useSelector((state) => state.long);
+  const lat = useSelector((state) => state.lat);
+  const attendanceFormatted = formatterTable(attendance);
+
+  const tableHead = ["No", "In", "Out", "Type"];
+  const widthArr = [64, 86, 86, 128];
 
   const goToFormAttend = () => {
     navigation.navigate("AttendForm");
   };
-  const goToFormPermit = () => {
-    navigation.navigate("PermitForm");
+  const handleSubmit = () => {
+    dispatch(
+      updateAttendance({
+        long,
+        lat,
+        attendanceType: "attendance",
+        checkOutTime: new Date().toISOString(),
+      })
+    )
+      .then(() => {
+        toast.show("Check out successfully! see you.", { type: "success" });
+      })
+      .catch((err) => toast.show("Check in first!", { type: "danger" }));
   };
 
-  useEffect(() => {
-    dispatch(fetchAttendance());
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(fetchAttendance());
+      dispatch(fetchEmployee());
+      dispatch(updateAttendance());
+    }, [dispatch])
+  );
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F8FF" }}>
@@ -48,9 +72,14 @@ export default function HomePage({ navigation }) {
           <View style={{ flexDirection: "row" }}>
             <Image
               source={{
-                uri: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                uri: profile.imgProfile,
               }}
-              style={{ height: 50, width: 50, marginRight: 10 }}
+              style={{
+                height: 50,
+                width: 50,
+                marginRight: 10,
+                borderRadius: "50%",
+              }}
             />
             <View>
               <Text
@@ -61,12 +90,12 @@ export default function HomePage({ navigation }) {
                   color: "#444655",
                 }}
               >
-                Name
+                {profile.firstName} {profile.lastName}
               </Text>
               <Text
                 style={{ fontSize: 15, letterSpacing: 2, color: "#444655" }}
               >
-                Division
+                {profile?.Department?.name}
               </Text>
             </View>
           </View>
@@ -84,15 +113,31 @@ export default function HomePage({ navigation }) {
             marginBottom: 20,
           }}
         >
-          <Text style={{ fontWeight: "bold", fontSize: 16, color: "#F7F8FF" }}>
-            Schedule
-          </Text>
-          <Text
-            style={{ color: "#F7F8FF", fontStyle: "italic", marginBottom: 15 }}
-          >
-            AK-401 (Shift Name)
-          </Text>
-
+          <View style={{ flexDirection: "row" }}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 16,
+                color: "#F7F8FF",
+                paddingBottom: 20,
+                paddingTop: 12,
+              }}
+            >
+              Time Attendance
+            </Text>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 10,
+                color: "#F7F8FF",
+                paddingBottom: 20,
+                paddingTop: 8,
+                marginLeft: 40,
+              }}
+            >
+              {formattedDate(new Date())}
+            </Text>
+          </View>
           <View style={{ flexDirection: "row", height: "65%" }}>
             <View
               style={{
@@ -109,13 +154,34 @@ export default function HomePage({ navigation }) {
               <Text
                 style={{ fontWeight: "bold", fontSize: 20, color: "#F7F8FF" }}
               >
-                In
+                Check In
               </Text>
-              <Text
-                style={{ fontWeight: "bold", fontSize: 30, color: "#F7F8FF" }}
-              >
-                00:00
-              </Text>
+              {attendanceFormatted.length > 0 &&
+              attendanceFormatted[0][0] !== null ? (
+                <>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 30,
+                      color: "#F7F8FF",
+                    }}
+                  >
+                    {attendanceFormatted[0][0]}
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 30,
+                      color: "#F7F8FF",
+                    }}
+                  >
+                    -:-
+                  </Text>
+                </>
+              )}
             </View>
 
             <View
@@ -132,13 +198,34 @@ export default function HomePage({ navigation }) {
               <Text
                 style={{ fontWeight: "bold", fontSize: 20, color: "#F7F8FF" }}
               >
-                Out
+                Check Out
               </Text>
-              <Text
-                style={{ fontWeight: "bold", fontSize: 30, color: "#F7F8FF" }}
-              >
-                08:00
-              </Text>
+              {attendanceFormatted.length > 0 &&
+              attendanceFormatted[0][1] !== null ? (
+                <>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 30,
+                      color: "#F7F8FF",
+                    }}
+                  >
+                    {attendanceFormatted[0][1]}
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 30,
+                      color: "#F7F8FF",
+                    }}
+                  >
+                    -:-
+                  </Text>
+                </>
+              )}
             </View>
           </View>
         </View>
@@ -181,12 +268,10 @@ export default function HomePage({ navigation }) {
               paddingHorizontal: 20,
               borderRadius: 20,
             }}
-            onPress={goToFormPermit}
+            onPress={handleSubmit}
           >
             <FontAwesome5 name="calendar-times" size={24} color="#F7F8FF" />
-            <Text style={{ marginLeft: 10, color: "#F7F8FF" }}>
-              Leave Permit
-            </Text>
+            <Text style={{ marginLeft: 10, color: "#F7F8FF" }}>Leave Work</Text>
           </TouchableOpacity>
         </View>
 

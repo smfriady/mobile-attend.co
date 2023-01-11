@@ -8,11 +8,12 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-import React, { createRef, useState } from "react";
+import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { loginEmployee } from "../store/actions/actions";
 import { useDispatch } from "react-redux";
+import { useToast } from "react-native-toast-notifications";
 
 export default function LoginPage({ navigation }) {
   const [onFocus, setOnFocus] = useState("");
@@ -20,10 +21,15 @@ export default function LoginPage({ navigation }) {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
 
+  const toast = useToast();
+
   const handleSubmit = () => {
     dispatch(loginEmployee({ email, password }))
-      .then(() => navigation.navigate("TabNavigation"))
-      .catch((err) => console.log(err));
+      .then(() => {
+        toast.show("login successfully! welcome...", { type: "success" });
+        navigation.navigate("TabNavigation");
+      })
+      .catch(() => toast.show(`Please login first!`, { type: "danger" }));
   };
 
   return (

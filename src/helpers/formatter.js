@@ -3,11 +3,18 @@ export const formatterTable = (array) => {
   const formatted = formattedArray.map((item) => {
     let arr = [];
     for (const val in item) {
-      if (val === "check_in_time" || val === "check_out_time") {
+      if (val === "checkInTime") {
         const timeFormatted = getHoursAndMinutes(new Date(item[val]));
         arr.push(timeFormatted);
       }
-      if (val === "attendance_type") {
+      if (val === "checkOutTime" && item[val] !== null) {
+        const timeFormatted = getHoursAndMinutes(new Date(item[val]));
+        arr.push(timeFormatted);
+      }
+      if (val === "checkOutTime" && item[val] === null) {
+        arr.push("-:-")
+      }
+      if (val === "attendanceType") {
         arr.push(item[val]);
       }
       if (val === "date") {
@@ -40,8 +47,8 @@ export const formattedDate = (date) => {
 const duplicateCheckIn = (array) => {
   const data = array.map((item) => {
     const obj = {
-        ...item,
-        date: item.check_in_time,
+      ...item,
+      date: item.checkInTime,
     };
     return obj;
   });

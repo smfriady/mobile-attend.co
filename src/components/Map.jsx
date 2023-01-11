@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, View, StyleSheet, Text, Dimensions } from "react-native";
+import { View, StyleSheet, Text, Dimensions } from "react-native";
 import * as TaskManager from "expo-task-manager";
 import * as Location from "expo-location";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Circle } from "react-native-maps";
 
-export default function Map() {
+export default function Map({ setLatitude, setLongitude, LATITUDE_COMPANY, LONGITUDE_COMPANY }) {
   const [location, setLocation] = useState(null);
   const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
   const [errorMsg, setErrorMsg] = useState(null);
@@ -23,7 +23,7 @@ export default function Map() {
       console.log(error);
       return;
     }
-    
+
     if (data) {
       const { locations } = data;
       // do something with the locations captured in the background
@@ -69,10 +69,12 @@ export default function Map() {
         latitude: location[0]?.coords.latitude,
         longitude: location[0]?.coords.longitude,
       });
+      setLatitude(location[0]?.coords.latitude);
+      setLongitude(location[0]?.coords.longitude);
     }
   }, [location]);
 
-    // console.log(location);
+  // console.log(location);
   let text = "Waiting..";
 
   if (errorMsg) {
@@ -102,17 +104,18 @@ export default function Map() {
         speed: -1,
       },
       timestamp: 1673053633013.4702,
-    }
+    },
   ];
 
   if (position.latitude && position.longitude)
     return (
       <View>
         <MapView
+          minZoomLevel={16}
           style={styles.map}
           initialRegion={{
-            latitude: position.latitude,
-            longitude: position.longitude,
+            latitude: LATITUDE_COMPANY,
+            longitude: LONGITUDE_COMPANY,
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA,
           }}
@@ -127,6 +130,26 @@ export default function Map() {
               <View style={styles.marker} />
             </View>
           </Marker>
+          <Marker
+            coordinate={{
+              latitude: LATITUDE_COMPANY,
+              longitude: LONGITUDE_COMPANY,
+            }}
+          >
+            <View>
+              <View style={styles.markerCompany} />
+            </View>
+          </Marker>
+          <Circle
+            radius={100}
+            strokeWidth={2}
+            strokeColor="rgba(0, 112, 255, 0.3)"
+            fillColor="rgba(0, 122, 255, 0.1)"
+            center={{
+              latitude: LATITUDE_COMPANY,
+              longitude: LONGITUDE_COMPANY,
+            }}
+          ></Circle>
         </MapView>
       </View>
     );
@@ -156,5 +179,14 @@ const styles = StyleSheet.create({
     borderRadius: 20 / 2,
     overflow: "hidden",
     backgroundColor: "#007AFF",
+  },
+  markerCompany: {
+    height: 20,
+    width: 20,
+    borderWidth: 3,
+    borderColor: "white",
+    borderRadius: 20 / 2,
+    overflow: "hidden",
+    backgroundColor: "red",
   },
 });
