@@ -19,8 +19,8 @@ export default function LoginPage({ navigation }) {
   const [onFocus, setOnFocus] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
   const dispatch = useDispatch();
-
   const { showToast } = useToaster();
 
   const handleSubmit = () => {

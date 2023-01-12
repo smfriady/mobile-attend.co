@@ -74,7 +74,6 @@ export default function Map({ setLatitude, setLongitude, LATITUDE_COMPANY, LONGI
     }
   }, [location]);
 
-  // console.log(location);
   let text = "Waiting..";
 
   if (errorMsg) {

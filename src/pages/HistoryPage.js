@@ -1,10 +1,4 @@
-import {
-  SafeAreaView,
-  Text,
-  View,
-  ScrollView,
-  Button,
-} from "react-native";
+import { SafeAreaView, Text, View, ScrollView, Button } from "react-native";
 import { Table, Row } from "react-native-table-component";
 import { Picker } from "@react-native-picker/picker";
 import CalendarPicker from "react-native-calendar-picker";
@@ -15,7 +9,6 @@ import { formatterTable } from "../helpers/formatter";
 import { fetchAttendance } from "../store/actions/actions";
 
 const HistoryPage = () => {
-  const dispatch = useDispatch();
   const [attendanceFormatted, setAttendanceFormatted] = useState([]);
   const [permitType, setPermitType] = useState("");
   const [date, setDate] = useState({
@@ -25,6 +18,7 @@ const HistoryPage = () => {
   const [show, setShow] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
 
+  const dispatch = useDispatch();
   const showModal = () => setShow(true);
   const hideModal = () => setShow(false);
   const containerStyle = { backgroundColor: "white", padding: 20 };
@@ -180,10 +174,7 @@ const HistoryPage = () => {
                 selectedValue={permitType}
                 onValueChange={(itemValue) => setPermitType(itemValue)}
               >
-                <Picker.Item label="Paid Leave" value="paid leave" />
-                <Picker.Item label="Sick" value="sick" />
                 <Picker.Item label="Absent" value="absent" />
-                <Picker.Item label="Permit" value="permit" />
                 <Picker.Item label="Attendance" value="attendance" />
               </Picker>
               <Button title="Close" onPress={hideModal}></Button>

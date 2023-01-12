@@ -1,12 +1,4 @@
-import {
-  SafeAreaView,
-  Text,
-  View,
-  ScrollView,
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-} from "react-native";
+import { SafeAreaView, Text, View, ScrollView } from "react-native";
 import { Table, Row } from "react-native-table-component";
 import { Provider } from "react-native-paper";
 import { useEffect, useState } from "react";
@@ -30,7 +22,6 @@ const HistoryPage = () => {
 
   const tableHead = ["No", "Amount", "Payment Date", "Period Salary"];
   const widthArr = [60, 140, 130, 150];
-
 
   return (
     <Provider>

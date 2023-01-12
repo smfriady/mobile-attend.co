@@ -22,8 +22,10 @@ import useToaster from "../helpers/toast";
 
 export default function HomePage({ navigation }) {
   const [attendanceFormatted, setAttendanceFormatted] = useState([]);
+
   const dispatch = useDispatch();
   const { showToast } = useToaster();
+
   const attendance = useSelector((state) => state.attendance);
   const profile = useSelector((state) => state.profile);
   const longitude = useSelector((state) => state.long);
@@ -48,7 +50,7 @@ export default function HomePage({ navigation }) {
       .then(() => {
         showToast({ val: "Check out successfully! see you." });
       })
-      .catch((err) => showToast({ val: "Check in first!", type: "danger" }));
+      .catch((err) => showToast({ val: "You're already check out!", type: "danger" }));
   };
 
   useFocusEffect(
@@ -137,8 +139,8 @@ export default function HomePage({ navigation }) {
                 color: "#F7F8FF",
                 paddingBottom: 16,
                 paddingTop: 8,
-                marginLeft: 88,
-                width: 120,
+                marginLeft: 84,
+                width: 110,
               }}
             >
               {formattedDate(new Date())}
